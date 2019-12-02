@@ -24,6 +24,15 @@ def insert(root, word, url):
     node.urls.append(url)
 
 
-def find(root, word):
-    
+def search(root, word):
+    """Look for the word in Trie, return stored urls if found"""
+    node = root
+    for char in word:
+        if char in node.children:
+            node = node.children[char]
+        else:
+            return
+    if node.word_finished == True:
+        return node.urls
+    return
 
