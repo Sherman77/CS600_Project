@@ -1,35 +1,33 @@
 from bs4 import BeautifulSoup
 import requests
-import re
-import Trie
 
-url = "http://www.numerix.com"
+def get_links(url, limit):
+    """Get all the links from a url"""
+    try:
+    page = requests.get(url=url, timeout=10)
+    except requests.exceptions.RequestException as e:
+        print(e)
+    else:
+        count = 0
+        soup = BeautifulSoup(page.content, "lxml").find_all('a', href=True)
+        links = []
+        for i in soup:
+            if count == limit:
+                return links
+            elif i['href'].startswith('http'):
+                links.append(i['href'])
+                count += 1
+        return links
 
-page = requests.get(url=url).text
-
-soup = BeautifulSoup(page, "lxml").find_all('p')
-
-new = Trie.TrieNode('#')
-
-str_lis = []
-
-for i in range(3):
-    str_lis += soup[i].text.split(' ')
-
-for wrd in str_lis:
-    Trie.insert(new, wrd, url)
-
-print(Trie.search(new, 'email'))
+def get_words(url):
+    """Get all the words from a html text"""
+    page = requests.get(url=url).content
+    soup = BeautifulSoup(page, "lxml").find_all('p')
+    translator = str.maketrans('', '', ''.join(punctuation))
+    words = []
+    for i in soup:
+        words.append(i.text)
+    return words
 
 
 
-
-
-""" def cleantag(string):
-    cleanr = re.compile('<.*?>')
-    cleantext = re.sub(cleanr, '', string)
-    return cleantext
-
-for i in range(3):
-    print(type(soup[i]))
-    print('/n') """

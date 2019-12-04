@@ -2,7 +2,7 @@
 
 class TrieNode:
 
-    def __init__(self, char):
+    def __init__(self, char=None):
 
         self.char = char
         self.children = {}
