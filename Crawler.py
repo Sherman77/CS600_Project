@@ -1,10 +1,16 @@
 from bs4 import BeautifulSoup
 import requests
 
+punctuation = ''.join([".", ",", "/", "==", "//", "<", ">", "?", ";", "'", ":",
+            "\“", "[", "]", "\\", "{", "}", "|", "+", "-", "=", "!", "@", "#", "$", "%", "^", "&", "*", "(",
+            ")", "_", "-", "\”", "\"", "—"])
+
+translator = str.maketrans('', '', ''.join(punctuation))
+
 def get_links(url, limit):
     """Get all the links from a url"""
     try:
-    page = requests.get(url=url, timeout=10)
+        page = requests.get(url=url, timeout=10)
     except requests.exceptions.RequestException as e:
         print(e)
     else:
@@ -23,11 +29,12 @@ def get_words(url):
     """Get all the words from a html text"""
     page = requests.get(url=url).content
     soup = BeautifulSoup(page, "lxml").find_all('p')
-    translator = str.maketrans('', '', ''.join(punctuation))
-    words = []
+    #translator = str.maketrans('', '', ''.join(punctuation))
+    words = ''
     for i in soup:
-        words.append(i.text)
-    return words
+        words += i.text
+    for word in words.translate(translator).split(' '):
+        yield word
 
 
 
