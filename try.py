@@ -3,14 +3,20 @@ import requests
 import re
 import Trie
 import string
-
+from validator_collection import validators, checkers
 punctuation = [".", ",", "/", "==", "//", "<", ">", "?", ";", "'", ":",
             "\“", "[", "]", "\\", "{", "}", "|", "+", "-", "=", "!", "@", "#", "$", "%", "^", "&", "*", "(",
             ")", "_", "-", "\”", "\"", "—"]
 
-url = "https://www.nytimes.com/"
-
+url = "http://wwsws.nsytimes.com/"
+print(checkers.is_url(url))
 try:
+    response = requests.get(url=url)
+except:
+    print("Failed!")
+else:
+    print(response)
+'''try:
     page = requests.get(url=url, timeout=10)
 
 except requests.exceptions.RequestException as e:
@@ -24,7 +30,7 @@ else:
     translator = str.maketrans('', '', ''.join(punctuation))
     for i in soup:
         links.append(i.text)
-    print(links)
+    print(links)'''
 #    for i in soup:
 #        print(i.text)
 '''    words = soup[9].text.split(' ')
